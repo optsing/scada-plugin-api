@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+  },
+  "include": [
+    "src/**/*.ts",
+  ],
+  "exclude": [
+    "lib",
+    "node_modules"
+  ]
+}
