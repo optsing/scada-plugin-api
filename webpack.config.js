@@ -7,7 +7,7 @@ module.exports = {
     output: {
         path: path.join(__dirname, 'lib'),
         filename: 'api.js',
-        library: 'scada-plugin-api',
+        library: 'PluginApi',
         libraryTarget: 'umd',
     },
     module: {
