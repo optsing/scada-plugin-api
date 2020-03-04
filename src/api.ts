@@ -1,5 +1,4 @@
 import json5 from 'json5';
-// const json5 = JSON;
 
 interface User {
   id: number;
@@ -107,11 +106,9 @@ const PluginApi = {
       filename, is_overwrite, content
     }, filename);
   },
-  loadJSONFile (filename: string): Promise<any> {
-    return this.loadTextFile(filename)
-      .then((text: string) => {
-        return json5.parse(text);
-      });
+  async loadJSONFile (filename: string): Promise<any> {
+    const text = await this.loadTextFile(filename);
+    return json5.parse(text);
   },
   saveJSONFile (filename: string, content: any, is_overwrite = false): Promise<void> {
     return this.saveTextFile(filename, JSON.stringify(content, null, 4), is_overwrite);
