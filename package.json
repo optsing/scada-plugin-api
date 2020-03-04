@@ -2,7 +2,7 @@
   "name": "scada-plugin-api",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/api.js",
+  "main": "lib/api.ts",
   "scripts": {
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/json5": "0.0.30",
     "json5": "^2.1.1"
   },
   "devDependencies": {
@@ -17,7 +18,6 @@
     "@babel/core": "^7.8.6",
     "@babel/preset-env": "^7.8.6",
     "@babel/preset-typescript": "^7.8.3",
-    "@types/json5": "0.0.30",
     "@typescript-eslint/eslint-plugin": "^2.22.0",
     "@typescript-eslint/parser": "^2.22.0",
     "babel-loader": "^8.0.6",
