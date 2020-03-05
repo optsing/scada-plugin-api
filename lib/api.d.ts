@@ -37,11 +37,13 @@ export declare function addListener(event_type: string, fn: (error: any, result:
 export declare function getCurrentUser(): Promise<User>;
 /**
  * Отображает всплывающее уведомление в системе
- * @param text Текст уведомления
- * @param title Заголовок уведомления
- * @param state Тип сообщения
+ * @param notifi Параметры всплывающего уведомления
  */
-export declare function sendNotifi(text: string, title: string, state?: 'success' | 'user' | 'warning' | 'message' | 'danger' | 'help'): Promise<void>;
+export declare function sendNotifi(notifi: {
+    text: string;
+    title: string;
+    state?: 'success' | 'user' | 'warning' | 'message' | 'danger' | 'help';
+}): Promise<void>;
 export declare function sendCommand(dev_id: string, command: string, argument?: number | string): Promise<void>;
 export declare function loadTextFile(filename: string): Promise<string>;
 export declare function saveTextFile(filename: string, content: string, is_overwrite?: boolean): Promise<void>;

@@ -96,14 +96,10 @@ export function getCurrentUser (): Promise<User> {
 
 /**
  * Отображает всплывающее уведомление в системе
- * @param text Текст уведомления
- * @param title Заголовок уведомления
- * @param state Тип сообщения
+ * @param notifi Параметры всплывающего уведомления
  */
-export function sendNotifi (text: string, title: string, state?: 'success' | 'user' | 'warning' | 'message' | 'danger' | 'help'): Promise<void> {
-  return createRequest('notifi', {
-    text, title, state
-  });
+export function sendNotifi (notifi: { text: string; title: string; state?: 'success' | 'user' | 'warning' | 'message' | 'danger' | 'help' }): Promise<void> {
+  return createRequest('notifi', notifi);
 }
 
 export function sendCommand (dev_id: string, command: string, argument?: number | string): Promise<void> {
