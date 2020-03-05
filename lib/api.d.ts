@@ -31,6 +31,7 @@ export interface Section {
     parents: string[];
 }
 export declare function addListener(event_type: string, fn: (error: any, result: any, tag: string) => void): void;
+export declare function setJSONParser(json_parser: JSON): void;
 export declare function getCurrentUser(): Promise<User>;
 export declare function sendNotifi(notifi: {
     text: string;

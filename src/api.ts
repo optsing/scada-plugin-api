@@ -1,5 +1,3 @@
-import json5 from 'json5';
-
 interface User {
   id: number;
   username: string;
@@ -34,14 +32,6 @@ export interface Section {
   parents: string[];
 }
 
-function sendMessage (type: string, data: any = undefined, tag: string = ''): void {
-  window.parent.postMessage({
-    type,
-    tag,
-    data
-  }, '*');
-}
-
 interface Request {
   event_type: string;
   tag: string;
@@ -51,6 +41,15 @@ interface Request {
 
 const listeners: { [event_type: string]: (error: any, result: any, tag: string) => void } = { };
 const requests: Request[] = [];
+let json: JSON = JSON;
+
+function sendMessage (type: string, data: any = undefined, tag: string = ''): void {
+  window.parent.postMessage({
+    type,
+    tag,
+    data
+  }, '*');
+}
 
 function createRequest<T> (event_type: string, data = undefined as any, tag = '' as string): Promise<T> {
   const deferrer = new Promise<T>((resolve, reject) => {
@@ -67,7 +66,7 @@ function createRequest<T> (event_type: string, data = undefined as any, tag = ''
 
 function checkResponses (event_type: string, tag: string, error: any, result: any): void {
   const request_ind = requests.findIndex(deferrer => deferrer.event_type === event_type && deferrer.tag === tag);
-  if(request_ind > -1) {
+  if (request_ind > -1) {
     if (error) {
       requests[request_ind].reject(error);
     } else {
@@ -78,7 +77,7 @@ function checkResponses (event_type: string, tag: string, error: any, result: an
 }
 
 function checkListeners (event_type: string, tag: string, error: any, result: any): void {
-  if(event_type in listeners) {
+  if (event_type in listeners) {
     listeners[event_type](error, result, tag);
   } else {
     checkResponses(event_type, tag, error, result);
@@ -87,6 +86,10 @@ function checkListeners (event_type: string, tag: string, error: any, result: an
 
 export function addListener (event_type: string, fn: (error: any, result: any, tag: string) => void): void {
   listeners[event_type] = fn;
+}
+
+export function setJSONParser (json_parser: JSON): void {
+  json = json_parser;
 }
 
 export function getCurrentUser (): Promise<User> {
@@ -117,7 +120,7 @@ export function saveTextFile (filename: string, content: string, is_overwrite = 
 
 export async function loadJSONFile (filename: string): Promise<any> {
   const text = await loadTextFile(filename);
-  return json5.parse(text);
+  return json.parse(text);
 }
 
 export function saveJSONFile (filename: string, content: any, is_overwrite = false): Promise<void> {
