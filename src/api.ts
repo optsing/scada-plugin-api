@@ -41,7 +41,6 @@ interface Request {
 
 const listeners: { [event_type: string]: (error: any, result: any, tag: string) => void } = { };
 const requests: Request[] = [];
-let json: { parse: (text: string) => any } = JSON;
 
 function sendMessage (type: string, data: any = undefined, tag: string = ''): void {
   window.parent.postMessage({
@@ -88,16 +87,23 @@ export function addListener (event_type: string, fn: (error: any, result: any, t
   listeners[event_type] = fn;
 }
 
-export function setJSONParser (json_parser: { parse: (text: string) => any }): void {
-  json = json_parser;
-}
-
+/**
+ *  Возвращает текущего пользователя
+ */
 export function getCurrentUser (): Promise<User> {
   return createRequest<User>('getCurrentUser');
 }
 
-export function sendNotifi (notifi: { text: string; state: string; title: string }): Promise<void> {
-  return createRequest('notifi', notifi);
+/**
+ * Отображает всплывающее уведомление в системе
+ * @param text Текст уведомления
+ * @param title Заголовок уведомления
+ * @param state Тип сообщения
+ */
+export function sendNotifi (text: string, title: string, state?: 'success' | 'user' | 'warning' | 'message' | 'danger' | 'help'): Promise<void> {
+  return createRequest('notifi', {
+    text, title, state
+  });
 }
 
 export function sendCommand (dev_id: string, command: string, argument?: number | string): Promise<void> {
@@ -118,9 +124,9 @@ export function saveTextFile (filename: string, content: string, is_overwrite = 
   }, filename);
 }
 
-export async function loadJSONFile (filename: string): Promise<any> {
+export async function loadJSONFile (filename: string, json_parser: { parse: (text: string) => any } = JSON): Promise<any> {
   const text = await loadTextFile(filename);
-  return json.parse(text);
+  return json_parser.parse(text);
 }
 
 export function saveJSONFile (filename: string, content: any, is_overwrite = false): Promise<void> {

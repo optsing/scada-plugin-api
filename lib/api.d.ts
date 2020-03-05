@@ -31,19 +31,23 @@ export interface Section {
     parents: string[];
 }
 export declare function addListener(event_type: string, fn: (error: any, result: any, tag: string) => void): void;
-export declare function setJSONParser(json_parser: {
-    parse: (text: string) => any;
-}): void;
+/**
+ *  Возвращает текущего пользователя
+ */
 export declare function getCurrentUser(): Promise<User>;
-export declare function sendNotifi(notifi: {
-    text: string;
-    state: string;
-    title: string;
-}): Promise<void>;
+/**
+ * Отображает всплывающее уведомление в системе
+ * @param text Текст уведомления
+ * @param title Заголовок уведомления
+ * @param state Тип сообщения
+ */
+export declare function sendNotifi(text: string, title: string, state?: 'success' | 'user' | 'warning' | 'message' | 'danger' | 'help'): Promise<void>;
 export declare function sendCommand(dev_id: string, command: string, argument?: number | string): Promise<void>;
 export declare function loadTextFile(filename: string): Promise<string>;
 export declare function saveTextFile(filename: string, content: string, is_overwrite?: boolean): Promise<void>;
-export declare function loadJSONFile(filename: string): Promise<any>;
+export declare function loadJSONFile(filename: string, json_parser?: {
+    parse: (text: string) => any;
+}): Promise<any>;
 export declare function saveJSONFile(filename: string, content: any, is_overwrite?: boolean): Promise<void>;
 export declare function loadDevicesDefinitions(): Promise<{
     [dev_id: string]: DeviceDefinition;
