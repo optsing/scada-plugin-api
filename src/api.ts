@@ -41,7 +41,7 @@ interface Request {
 
 const listeners: { [event_type: string]: (error: any, result: any, tag: string) => void } = { };
 const requests: Request[] = [];
-let json: JSON = JSON;
+let json: { parse: (text: string) => any } = JSON;
 
 function sendMessage (type: string, data: any = undefined, tag: string = ''): void {
   window.parent.postMessage({
@@ -88,7 +88,7 @@ export function addListener (event_type: string, fn: (error: any, result: any, t
   listeners[event_type] = fn;
 }
 
-export function setJSONParser (json_parser: JSON): void {
+export function setJSONParser (json_parser: { parse: (text: string) => any }): void {
   json = json_parser;
 }
 
