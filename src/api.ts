@@ -50,17 +50,27 @@ function sendMessage (type: string, data: any = undefined, tag: string = ''): vo
   }, '*');
 }
 
+/**
+ * Проверяет что страница загружена в iframe. Не гарантирует что страница загружена в cкаде!
+ */
+export function isInIframe (): boolean {
+  return window.location !== window.parent.location;
+}
+
 function createRequest<T> (event_type: string, data = undefined as any, tag = '' as string): Promise<T> {
-  const deferrer = new Promise<T>((resolve, reject) => {
-    requests.push({
-      event_type,
-      tag,
-      resolve,
-      reject
+  if (isInIframe()) {
+    const deferrer = new Promise<T>((resolve, reject) => {
+      requests.push({
+        event_type,
+        tag,
+        resolve,
+        reject
+      });
     });
-  });
-  sendMessage(event_type, data, tag);
-  return deferrer;
+    sendMessage(event_type, data, tag);
+    return deferrer;
+  }
+  return Promise.reject(new Error('not in iframe'));
 }
 
 function checkResponses (event_type: string, tag: string, error: any, result: any): void {
@@ -102,18 +112,34 @@ export function sendNotifi (notifi: { text: string; title: string; state?: 'succ
   return createRequest('notifi', notifi);
 }
 
+/**
+ * Отправляет команду в ядро
+ * @param dev_id ID устройства
+ * @param command ID команды
+ * @param argument Передаваемое значение
+ */
 export function sendCommand (dev_id: string, command: string, argument?: number | string): Promise<void> {
   return createRequest<void>('sendCommand', {
     dev_id, command, argument
   }, dev_id + command + argument);
 }
 
+/**
+ * Возвращает содержимое текстового файла из папки Data
+ * @param filename Путь к файлу
+ */
 export function loadTextFile (filename: string): Promise<string> {
   return createRequest<string>('readFile', {
     filename
   }, filename);
 }
 
+/**
+ * Сохраняет данные в текстовый файл в папке Data
+ * @param filename Путь к файлу
+ * @param content Данные для сохранения
+ * @param is_overwrite Разрешение на перезапись
+ */
 export function saveTextFile (filename: string, content: string, is_overwrite = false): Promise<void> {
   return createRequest<void>('writeFile', {
     filename, is_overwrite, content
@@ -209,10 +235,6 @@ export function removeFromMailing (mail_id: number, device_ids: string[]): Promi
   return createRequest('removeFromMailing', {
     mail_id, device_ids
   }, mail_id.toString());
-}
-
-export function isInIframe (): boolean {
-  return window.location !== window.parent.location;
 }
 
 window.addEventListener('message', e => {

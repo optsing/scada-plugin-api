@@ -5,7 +5,7 @@ const path = require('path');
 module.exports = {
     entry: path.join(__dirname, 'src', 'api.ts'),
     output: {
-        path: path.join(__dirname, 'lib'),
+        path: path.join(__dirname, 'dist'),
         filename: 'api.js',
         library: 'PluginApi',
         libraryTarget: 'umd',

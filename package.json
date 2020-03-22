@@ -2,8 +2,8 @@
   "name": "scada-plugin-api",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/api.js",
-  "types": "lib/api.d.ts",
+  "main": "dist/api.js",
+  "types": "dist/api.d.ts",
   "scripts": {
     "build": "webpack",
     "typing": "tsc",

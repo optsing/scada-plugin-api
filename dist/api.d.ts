@@ -30,6 +30,10 @@ export interface Section {
     id: string;
     parents: string[];
 }
+/**
+ * Проверяет что страница загружена в iframe. Не гарантирует что страница загружена в cкаде!
+ */
+export declare function isInIframe(): boolean;
 export declare function addListener(event_type: string, fn: (error: any, result: any, tag: string) => void): void;
 /**
  *  Возвращает текущего пользователя
@@ -44,8 +48,24 @@ export declare function sendNotifi(notifi: {
     title: string;
     state?: 'success' | 'user' | 'warning' | 'message' | 'danger' | 'help';
 }): Promise<void>;
+/**
+ * Отправляет команду в ядро
+ * @param dev_id ID устройства
+ * @param command ID команды
+ * @param argument Передаваемое значение
+ */
 export declare function sendCommand(dev_id: string, command: string, argument?: number | string): Promise<void>;
+/**
+ * Возвращает содержимое текстового файла из папки Data
+ * @param filename Путь к файлу
+ */
 export declare function loadTextFile(filename: string): Promise<string>;
+/**
+ * Сохраняет данные в текстовый файл в папке Data
+ * @param filename Путь к файлу
+ * @param content Данные для сохранения
+ * @param is_overwrite Разрешение на перезапись
+ */
 export declare function saveTextFile(filename: string, content: string, is_overwrite?: boolean): Promise<void>;
 export declare function loadJSONFile(filename: string, json_parser?: {
     parse: (text: string) => any;
@@ -123,5 +143,4 @@ export declare function navigateTo(path: string, { query, replace_history }?: {
 }): Promise<void>;
 export declare function addToMailing(mail_id: number, device_ids: string[]): Promise<void>;
 export declare function removeFromMailing(mail_id: number, device_ids: string[]): Promise<void>;
-export declare function isInIframe(): boolean;
 export {};
