@@ -9,6 +9,7 @@ interface User {
     auth_type: string;
 }
 export interface DeviceDefinition {
+    id: string;
     title: string;
     type: string;
     section: string;
@@ -17,8 +18,28 @@ export interface DeviceDefinition {
     config_path: string;
     doc_info: string;
     doc_system: string;
-    pdu_poses?: string[];
-    rack_type_title?: string;
+    bg_image: string;
+    commands: string[];
+    commands_tile: string[];
+    comment: string;
+    comment_author: string;
+    comment_author_id: number;
+    comment_date: Date | null;
+    doc_location_room: string;
+    doc_model: string;
+    doc_service_room: string;
+    driver_type: string;
+    handler: string;
+    mnemo: string;
+    mode: string;
+    plugins: string[];
+    room: string;
+    service: string[];
+    url: [];
+    variables_info: {
+        [var_id: string]: any;
+    };
+    variables_tile: string[];
 }
 export interface DeviceData {
     id: string;
