@@ -1,4 +1,4 @@
-interface User {
+export interface User {
     id: number;
     username: string;
     privilege: string;
@@ -8,38 +8,43 @@ interface User {
     last_login: string;
     auth_type: string;
 }
-export interface DeviceDefinition {
-    id: string;
+export interface BasicDeviceDefinition {
     title: string;
-    type: string;
     section: string;
-    address: string;
-    additional: string;
-    config_path: string;
-    doc_info: string;
-    doc_system: string;
+    status_variable: string;
+    mnemo: string;
+    url: string;
     bg_image: string;
+    plugins: string[];
+}
+export interface DescriptionDeviceDefinition {
+    doc_system: string;
+    doc_model: string;
+    doc_location_room: string;
+    doc_service_room: string;
+    doc_info: string;
+    additional: string;
+}
+export interface DeviceDefinition extends BasicDeviceDefinition, DescriptionDeviceDefinition {
+    id: string;
+    type: string;
+    driver_type: string;
+    address: string;
+    config_path: string;
     commands: string[];
     commands_tile: string[];
-    comment: string;
-    comment_author: string;
-    comment_author_id: number;
-    comment_date: Date | null;
-    doc_location_room: string;
-    doc_model: string;
-    doc_service_room: string;
-    driver_type: string;
     handler: string;
-    mnemo: string;
     mode: string;
-    plugins: string[];
     room: string;
     service: string[];
-    url: [];
     variables_info: {
         [var_id: string]: any;
     };
     variables_tile: string[];
+    comment: string;
+    comment_author: string;
+    comment_author_id: number;
+    comment_date: Date | null;
 }
 export interface DeviceData {
     id: string;
@@ -164,4 +169,3 @@ export declare function navigateTo(path: string, { query, replace_history }?: {
 }): Promise<void>;
 export declare function addToMailing(mail_id: number, device_ids: string[]): Promise<void>;
 export declare function removeFromMailing(mail_id: number, device_ids: string[]): Promise<void>;
-export {};
