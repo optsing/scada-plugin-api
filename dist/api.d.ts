@@ -169,3 +169,4 @@ export declare function navigateTo(path: string, { query, replace_history }?: {
 }): Promise<void>;
 export declare function addToMailing(mail_id: number, device_ids: string[]): Promise<void>;
 export declare function removeFromMailing(mail_id: number, device_ids: string[]): Promise<void>;
+export declare function loadSettings(plugin_id: string): Promise<any>;
