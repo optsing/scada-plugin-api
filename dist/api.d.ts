@@ -117,6 +117,8 @@ export declare function saveDeviceDescription(dev_id: string, { system, model, l
     description?: string | undefined;
     additional?: string | undefined;
 }): Promise<void>;
+export declare function saveDeviceTileVariables(dev_id: string, variable_ids: string[]): Promise<void>;
+export declare function saveDeviceCommands(dev_id: string, variable_ids: string[]): Promise<void>;
 export declare function loadDevicesData(): Promise<DeviceData[]>;
 export declare function loadDeviceData(dev_id: string): Promise<DeviceData>;
 export declare function updateCache(path?: string, replace_history?: boolean): Promise<void>;

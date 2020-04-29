@@ -201,6 +201,18 @@ export function saveDeviceDescription (dev_id: string, {
   }, dev_id);
 }
 
+export function saveDeviceTileVariables (dev_id: string, variable_ids: string[]): Promise<void> {
+  return createRequest<void>('saveDeviceTileVariables', {
+    dev_id, variable_ids,
+  }, dev_id);
+}
+
+export function saveDeviceCommands (dev_id: string, variable_ids: string[]): Promise<void> {
+  return createRequest<void>('saveDeviceCommands', {
+    dev_id, variable_ids,
+  }, dev_id);
+}
+
 export function loadDevicesData (): Promise<DeviceData[]> {
   return createRequest<DeviceData[]>('getDevicesData');
 }
