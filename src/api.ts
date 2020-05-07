@@ -59,20 +59,23 @@ export interface Section {
 }
 
 interface Request {
-  event_type: string;
+  method: string;
   tag: string;
   resolve: (value?: any) => void;
   reject: (error?: any) => void;
 }
 
-const listeners: { [event_type: string]: (error: any, result: any, tag: string) => void } = { };
+const MESSAGE_TYPE = 'PluginApi';
+
+const listeners: { [method: string]: (error: any, result: any, tag: string) => void } = { };
 const requests: Request[] = [];
 
-function sendMessage (type: string, data: any = undefined, tag: string = ''): void {
+function sendMessage (method: string, data: any = undefined, tag: string = ''): void {
   window.parent.postMessage({
-    type,
+    type: MESSAGE_TYPE,
+    method,
     tag,
-    data
+    data,
   }, '*');
 }
 
@@ -83,24 +86,24 @@ export function isInIframe (): boolean {
   return window.location !== window.parent.location;
 }
 
-function createRequest<T> (event_type: string, data = undefined as any, tag = '' as string): Promise<T> {
+function createRequest<T> (method: string, data = undefined as any, tag = '' as string): Promise<T> {
   if (isInIframe()) {
     const deferrer = new Promise<T>((resolve, reject) => {
       requests.push({
-        event_type,
+        method,
         tag,
         resolve,
         reject
       });
     });
-    sendMessage(event_type, data, tag);
+    sendMessage(method, data, tag);
     return deferrer;
   }
   return Promise.reject(new Error('not in iframe'));
 }
 
-function checkResponses (event_type: string, tag: string, error: any, result: any): void {
-  const request_ind = requests.findIndex(deferrer => deferrer.event_type === event_type && deferrer.tag === tag);
+function checkResponses (method: string, tag: string, error: any, result: any): void {
+  const request_ind = requests.findIndex(deferrer => deferrer.method === method && deferrer.tag === tag);
   if (request_ind > -1) {
     if (error) {
       requests[request_ind].reject(error);
@@ -111,16 +114,16 @@ function checkResponses (event_type: string, tag: string, error: any, result: an
   }
 }
 
-function checkListeners (event_type: string, tag: string, error: any, result: any): void {
-  if (event_type in listeners) {
-    listeners[event_type](error, result, tag);
+function checkListeners (method: string, tag: string, error: any, result: any): void {
+  if (method in listeners) {
+    listeners[method](error, result, tag);
   } else {
-    checkResponses(event_type, tag, error, result);
+    checkResponses(method, tag, error, result);
   }
 }
 
-export function addListener (event_type: string, fn: (error: any, result: any, tag: string) => void): void {
-  listeners[event_type] = fn;
+export function addListener (method: string, fn: (error: any, result: any, tag: string) => void): void {
+  listeners[method] = fn;
 }
 
 /**
@@ -301,5 +304,7 @@ export async function updateUrl (path: string): Promise<void> {
 }
 
 window.addEventListener('message', e => {
-  checkListeners(e.data.type, e.data.tag, e.data.error, e.data.result);
+  if (e.data.type === MESSAGE_TYPE) {
+    checkListeners(e.data.method, e.data.tag, e.data.error, e.data.result);
+  }
 });

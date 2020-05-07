@@ -60,7 +60,7 @@ export interface Section {
  * Проверяет что страница загружена в iframe. Не гарантирует что страница загружена в cкаде!
  */
 export declare function isInIframe(): boolean;
-export declare function addListener(event_type: string, fn: (error: any, result: any, tag: string) => void): void;
+export declare function addListener(method: string, fn: (error: any, result: any, tag: string) => void): void;
 /**
  *  Возвращает текущего пользователя
  */
