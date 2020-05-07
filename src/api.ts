@@ -291,7 +291,7 @@ export async function identify (): Promise<string> {
 export async function loadSettings (): Promise<any> {
   const identify_token = await identify();
   return createRequest('loadSettings', {
-    identify_token
+    identify_token,
   });
 }
 
