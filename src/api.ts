@@ -275,21 +275,12 @@ export function removeFromMailing (mail_id: number, device_ids: string[]): Promi
   }, mail_id.toString());
 }
 
-let is_identify_token_approved: boolean = false;
 let identify_token: string;
 
 export async function identify (): Promise<string> {
-  if (!is_identify_token_approved) {
-    if (!identify_token) {
-      const response = await createRequest<{ identify_token: string }>('startIdentify');
-      identify_token = response.identify_token;
-    }
-
-    await createRequest('finishIdentify', {
-      identify_token,
-    });
-
-    is_identify_token_approved = true;
+  if (!identify_token) {
+    const response = await createRequest<{ identify_token: string }>('identify');
+    identify_token = response.identify_token;
   }
   return identify_token;
 }
@@ -308,13 +299,6 @@ export async function updateUrl (path: string): Promise<void> {
     identify_token,
   }, path);
 }
-
-listeners.doIdentify = function (err, { position_token }): void {
-  sendMessage('doIdentify', {
-    identify_token,
-    position_token,
-  });
-};
 
 window.addEventListener('message', e => {
   checkListeners(e.data.type, e.data.tag, e.data.error, e.data.result);
