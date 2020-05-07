@@ -1,15 +1,16 @@
 /* eslint-disable */
 
-function postMessage (type, data) {
+function postMessage (method, data) {
     window.parent.postMessage({
-        type: type,
-        data: data
+      type: 'PluginApi',
+      method: method,
+      data: data
     }, '*');
 }
 
 window.addEventListener('message', function (e) {
-  const type = e.data.type;
-  if (type === 'identify') {
+  const method = e.data.method;
+  if (method === 'identify') {
     postMessage('updateUrl', {
       path: mw.config.get('wgRelevantPageName'),
       identify_token: e.data.result.identify_token
