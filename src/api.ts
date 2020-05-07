@@ -281,6 +281,12 @@ export function loadSettings (plugin_id: string): Promise<any> {
   }, plugin_id);
 }
 
+export function updateUrl (path: string): Promise<void> {
+  return createRequest('updateUrl', {
+    path,
+  }, path);
+}
+
 window.addEventListener('message', e => {
   checkListeners(e.data.type, e.data.tag, e.data.error, e.data.result);
 });
