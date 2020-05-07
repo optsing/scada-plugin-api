@@ -275,10 +275,8 @@ export function removeFromMailing (mail_id: number, device_ids: string[]): Promi
   }, mail_id.toString());
 }
 
-export function loadSettings (plugin_id: string): Promise<any> {
-  return createRequest('loadSettings', {
-    plugin_id,
-  }, plugin_id);
+export function loadSettings (): Promise<any> {
+  return createRequest('loadSettings');
 }
 
 export function updateUrl (path: string): Promise<void> {
