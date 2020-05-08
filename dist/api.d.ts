@@ -164,7 +164,7 @@ export declare function addSection({ id, title, subtitle, icon, mnemo, view, lin
     slideshow_width?: number | undefined;
 }): Promise<void>;
 export declare function removeSection(id: string): Promise<void>;
-export declare function loadSections(): Promise<Section[]>;
+export declare function loadSections(ids?: string[]): Promise<Section[]>;
 export declare function navigateTo(path: string, { query, replace_history }?: {
     query?: any;
     replace_history?: boolean | undefined;
