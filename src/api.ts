@@ -256,8 +256,10 @@ export function removeSection (id: string): Promise<void> {
   return createRequest<void>('removeSection', { id }, id);
 }
 
-export function loadSections (): Promise<Section[] > {
-  return createRequest<Section[]>('getSections');
+export function loadSections (ids?: string[]): Promise<Section[] > {
+  return createRequest<Section[]>('getSections', {
+    ids,
+  }, ids?.join(''));
 }
 
 export function navigateTo (path: string, { query = {} as any, replace_history = false } = {}): Promise<void> {
