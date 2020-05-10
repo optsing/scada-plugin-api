@@ -175,6 +175,6 @@ export declare function removeFromMailing(mail_id: number, device_ids: string[])
 export declare function identify(): Promise<string>;
 export declare function loadSettings(): Promise<any>;
 export declare function updateUrl({ path, device_id }: {
-    path: string;
-    device_id: string;
+    path?: string;
+    device_id?: string;
 }): Promise<void>;
