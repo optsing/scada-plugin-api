@@ -66,6 +66,7 @@ interface Request {
 }
 
 const MESSAGE_TYPE = 'PluginApi';
+const IS_IN_IFRAME = window.location !== window.parent.location;
 
 const listeners: { [method: string]: (error: any, result: any, tag: string) => void } = { };
 const requests: Request[] = [];
@@ -83,23 +84,24 @@ function sendMessage (method: string, data: any = undefined, tag: string = ''): 
  * Проверяет что страница загружена в iframe. Не гарантирует что страница загружена в cкаде!
  */
 export function isInIframe (): boolean {
-  return window.location !== window.parent.location;
+  return IS_IN_IFRAME;
 }
 
 function createRequest<T> (method: string, data = undefined as any, tag = '' as string): Promise<T> {
-  if (isInIframe()) {
+  if (IS_IN_IFRAME) {
     const deferrer = new Promise<T>((resolve, reject) => {
-      requests.push({
+      const request = {
         method,
         tag,
         resolve,
-        reject
-      });
+        reject,
+      };
+      requests.push(request);
     });
     sendMessage(method, data, tag);
     return deferrer;
   }
-  return Promise.reject(new Error('not in iframe'));
+  return Promise.reject(new Error('Plugin Api: Not in iframe'));
 }
 
 function checkResponses (method: string, tag: string, error: any, result: any): void {
@@ -311,7 +313,7 @@ export async function updateUrl ({ path, device_id }: { path?: string; device_id
 }
 
 window.addEventListener('message', e => {
-  if (e.data.type === MESSAGE_TYPE) {
+  if (e.data.type === MESSAGE_TYPE && e.data.response) {
     checkListeners(e.data.method, e.data.tag, e.data.error, e.data.result);
   }
 });
