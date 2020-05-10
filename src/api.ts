@@ -301,10 +301,11 @@ export async function loadSettings (): Promise<any> {
   });
 }
 
-export async function updateUrl (path: string): Promise<void> {
+export async function updateUrl ({ path, device_id }: { path: string; device_id: string }): Promise<void> {
   const identify_token = await identify();
   return createRequest('updateUrl', {
     path,
+    device_id,
     identify_token,
   }, path);
 }
