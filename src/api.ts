@@ -59,8 +59,6 @@ export interface Section {
 }
 
 interface Request {
-  method: string;
-  tag: string;
   resolve: (value?: any) => void;
   reject: (error?: any) => void;
 }
@@ -69,7 +67,7 @@ const MESSAGE_TYPE = 'PluginApi';
 const IS_IN_IFRAME = window.location !== window.parent.location;
 
 const listeners: { [method: string]: (error: any, result: any, tag: string) => void } = { };
-const requests: Request[] = [];
+const requests: { [tag: string]: Request } = { };
 
 function sendMessage (method: string, data: any = undefined, tag: string = ''): void {
   window.parent.postMessage({
@@ -87,16 +85,18 @@ export function isInIframe (): boolean {
   return IS_IN_IFRAME;
 }
 
-function createRequest<T> (method: string, data = undefined as any, tag = '' as string): Promise<T> {
+function createRandomTag (): string {
+  return Math.random().toString(36).substring(2);
+}
+
+function createRequest<T> (method: string, data = undefined as any): Promise<T> {
   if (IS_IN_IFRAME) {
+    const tag = method + createRandomTag();
     const deferrer = new Promise<T>((resolve, reject) => {
-      const request = {
-        method,
-        tag,
+      requests[tag] = {
         resolve,
         reject,
       };
-      requests.push(request);
     });
     sendMessage(method, data, tag);
     return deferrer;
@@ -104,15 +104,14 @@ function createRequest<T> (method: string, data = undefined as any, tag = '' as 
   return Promise.reject(new Error('Plugin Api: Not in iframe'));
 }
 
-function checkResponses (method: string, tag: string, error: any, result: any): void {
-  const request_ind = requests.findIndex(deferrer => deferrer.method === method && deferrer.tag === tag);
-  if (request_ind > -1) {
+function checkResponses (tag: string, error: any, result: any): void {
+  if (tag in requests) {
     if (error) {
-      requests[request_ind].reject(error);
+      requests[tag].reject(error);
     } else {
-      requests[request_ind].resolve(result);
+      requests[tag].resolve(result);
     }
-    requests.splice(request_ind, 1);
+    delete requests[tag];
   }
 }
 
@@ -120,7 +119,7 @@ function checkListeners (method: string, tag: string, error: any, result: any): 
   if (method in listeners) {
     listeners[method](error, result, tag);
   } else {
-    checkResponses(method, tag, error, result);
+    checkResponses(tag, error, result);
   }
 }
 
@@ -151,8 +150,10 @@ export function sendNotifi (notifi: { text: string; title: string; state?: 'succ
  */
 export function sendCommand (dev_id: string, command: string, argument?: number | string): Promise<void> {
   return createRequest<void>('sendCommand', {
-    dev_id, command, argument
-  }, dev_id + command + argument);
+    dev_id,
+    command,
+    argument,
+  });
 }
 
 /**
@@ -161,8 +162,8 @@ export function sendCommand (dev_id: string, command: string, argument?: number 
  */
 export function loadTextFile (filename: string): Promise<string> {
   return createRequest<string>('readFile', {
-    filename
-  }, filename);
+    filename,
+  });
 }
 
 /**
@@ -173,8 +174,10 @@ export function loadTextFile (filename: string): Promise<string> {
  */
 export function saveTextFile (filename: string, content: string, is_overwrite = false): Promise<void> {
   return createRequest<void>('writeFile', {
-    filename, is_overwrite, content
-  }, filename);
+    filename,
+    is_overwrite,
+    content,
+  });
 }
 
 export async function loadJSONFile (filename: string, json_parser: { parse: (text: string) => any } = JSON): Promise<any> {
@@ -195,27 +198,29 @@ export function saveDeviceDefinition (dev_id: string, {
 } = {}): Promise<void> {
   return createRequest<void>('saveDeviceDefinitionAdvanced', {
     dev_id, title, section, status_variable, mnemo, url, bg_image, plugins
-  }, dev_id);
+  });
 }
 
 export function saveDeviceDescription (dev_id: string, {
   system = '', model = '', location = '', service = '', description = '', additional = ''
 }): Promise<void> {
   return createRequest<void>('saveDeviceDescription', {
-    dev_id, system, model, location, service, description, additional
-  }, dev_id);
+    dev_id, system, model, location, service, description, additional,
+  });
 }
 
 export function saveDeviceTileVariables (dev_id: string, variable_ids: string[]): Promise<void> {
   return createRequest<void>('saveDeviceTileVariables', {
-    dev_id, variable_ids,
-  }, dev_id);
+    dev_id,
+    variable_ids,
+  });
 }
 
 export function saveDeviceCommands (dev_id: string, variable_ids: string[]): Promise<void> {
   return createRequest<void>('saveDeviceCommands', {
-    dev_id, variable_ids,
-  }, dev_id);
+    dev_id,
+    variable_ids,
+  });
 }
 
 export function loadDevicesData (): Promise<DeviceData[]> {
@@ -224,13 +229,14 @@ export function loadDevicesData (): Promise<DeviceData[]> {
 
 export function loadDeviceData (dev_id: string): Promise<DeviceData > {
   return createRequest<DeviceData>('getDeviceData', {
-    dev_id
+    dev_id,
   });
 }
 
 export function updateCache (path: string = '', replace_history: boolean = false): Promise<void> {
   return createRequest<void>('updateCache', {
-    path, replace_history
+    path,
+    replace_history,
   });
 }
 
@@ -241,7 +247,7 @@ export function saveSection ({
 } = {}): Promise<void> {
   return createRequest<void>('saveSection', {
     id, old_id, title, subtitle, icon, mnemo, view, linked_dev_id, use_dev_state, subtitle_prop, is_uncollapsed, is_mixed, is_hidden_sidebar, parents, children, sorting, slideshow, owners, slideshow_width
-  }, id);
+  });
 }
 
 export function addSection ({
@@ -251,17 +257,19 @@ export function addSection ({
 } = {}): Promise<void> {
   return createRequest<void>('addSection', {
     id, title, subtitle, icon, mnemo, view, linked_dev_id, use_dev_state, subtitle_prop, is_uncollapsed, is_mixed, is_hidden_sidebar, parents, children, sorting, slideshow, owners, slideshow_width
-  }, id);
+  });
 }
 
 export function removeSection (id: string): Promise<void> {
-  return createRequest<void>('removeSection', { id }, id);
+  return createRequest<void>('removeSection', {
+    id,
+  });
 }
 
 export function loadSection (id: string): Promise<Section> {
   return createRequest<Section>('getSection', {
     id,
-  }, id);
+  });
 }
 
 export function loadSections (): Promise<Section[] > {
@@ -270,20 +278,24 @@ export function loadSections (): Promise<Section[] > {
 
 export function navigateTo (path: string, { query = {} as any, replace_history = false } = {}): Promise<void> {
   return createRequest('navigateTo', {
-    path, query, replace_history
-  }, path);
+    path,
+    query,
+    replace_history,
+  });
 }
 
 export function addToMailing (mail_id: number, device_ids: string[]): Promise<void> {
   return createRequest('addToMailing', {
-    mail_id, device_ids
-  }, mail_id.toString());
+    mail_id,
+    device_ids,
+  });
 }
 
 export function removeFromMailing (mail_id: number, device_ids: string[]): Promise<void> {
   return createRequest('removeFromMailing', {
-    mail_id, device_ids
-  }, mail_id.toString());
+    mail_id,
+    device_ids,
+  });
 }
 
 let identify_token: string;
@@ -309,7 +321,7 @@ export async function updateUrl ({ path, device_id }: { path?: string; device_id
     path,
     device_id,
     identify_token,
-  }, path);
+  });
 }
 
 window.addEventListener('message', e => {
