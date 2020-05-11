@@ -56,6 +56,20 @@ export interface Section {
     id: string;
     parents: string[];
 }
+interface UrlButton {
+    title: string;
+    icon: string;
+    url: string;
+    url_mode?: 'external' | 'download';
+}
+interface FunctionButton {
+    title: string;
+    icon: string;
+    onClick: () => void;
+}
+interface Separator {
+    separator: true;
+}
 /**
  * Проверяет что страница загружена в iframe. Не гарантирует что страница загружена в cкаде!
  */
@@ -179,3 +193,7 @@ export declare function updateUrl({ path, device_id }: {
     path?: string;
     device_id?: string;
 }): Promise<void>;
+export declare function addButtonListener(id: string, listener: () => void): void;
+export declare function removeButtonListener(id: string): void;
+export declare function registerButtons(buttons: (UrlButton | FunctionButton | Separator)[]): Promise<void>;
+export {};

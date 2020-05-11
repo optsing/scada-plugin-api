@@ -58,15 +58,40 @@ export interface Section {
   parents: string[];
 }
 
+interface UrlButton {
+  title: string;
+  icon: string;
+  url: string;
+  url_mode?: 'external' | 'download';
+}
+
+interface FunctionButton {
+  title: string;
+  icon: string;
+  onClick: () => void;
+}
+
+interface IdButton {
+  title: string;
+  icon: string;
+  id: string;
+}
+
+interface Separator {
+  separator: true;
+}
+
 interface Request {
   resolve: (value?: any) => void;
   reject: (error?: any) => void;
 }
 
+type Listener = (error: any, result: any, tag: string) => void;
+
 const MESSAGE_TYPE = 'PluginApi';
 const IS_IN_IFRAME = window.location !== window.parent.location;
 
-const listeners: { [method: string]: (error: any, result: any, tag: string) => void } = { };
+const listeners: { [method: string]: Listener } = { };
 const requests: { [tag: string]: Request } = { };
 
 let identify_token: string;
@@ -88,13 +113,13 @@ export function isInIframe (): boolean {
   return IS_IN_IFRAME;
 }
 
-function createRandomTag (): string {
+function createRandomString (): string {
   return Math.random().toString(36).substring(2);
 }
 
 function createRequest<T> (method: string, data = undefined as any): Promise<T> {
   if (IS_IN_IFRAME) {
-    const tag = method + createRandomTag();
+    const tag = method + createRandomString();
     const deferrer = new Promise<T>((resolve, reject) => {
       requests[tag] = {
         resolve,
@@ -330,6 +355,60 @@ export async function updateUrl ({ path, device_id }: { path?: string; device_id
   return createRequest('updateUrl', {
     path,
     device_id,
+    identify_token,
+  });
+}
+
+let button_id_to_listeners: { [id: string]: () => void } = { };
+
+export function addButtonListener (id: string, listener: () => void) {
+  button_id_to_listeners[id] = listener;
+}
+
+export function removeButtonListener (id: string) {
+  delete button_id_to_listeners[id];
+}
+
+addListener('buttonClicked', (_, { id }) => {
+  if (id in button_id_to_listeners) {
+    button_id_to_listeners[id]();
+  }
+});
+
+export async function registerButtons (buttons: (UrlButton | FunctionButton | Separator)[]): Promise<void> {
+  if (!identify_token) {
+    await identify();
+  }
+  button_id_to_listeners = { };
+  const request_buttons: (UrlButton | IdButton | Separator)[] = [];
+  buttons.forEach(btn => {
+    if ('url' in btn) {
+      const urlButton: UrlButton = {
+        title: btn.title,
+        icon: btn.icon,
+        url: btn.url,
+      }
+      if (btn.url_mode) {
+        urlButton.url_mode = btn.url_mode;
+      }
+      request_buttons.push(urlButton);
+    } else if ('onClick' in btn) {
+      const id = createRandomString();
+      addButtonListener(id, btn.onClick);
+      const idButton: IdButton = {
+        title: btn.title,
+        icon: btn.icon,
+        id,
+      };
+      request_buttons.push(idButton);
+    } else if (btn.separator) {
+      request_buttons.push({
+        separator: true,
+      });
+    }
+  });
+  return createRequest('registerButtons', {
+    buttons: request_buttons,
     identify_token,
   });
 }
