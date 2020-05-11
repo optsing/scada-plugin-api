@@ -69,6 +69,9 @@ const IS_IN_IFRAME = window.location !== window.parent.location;
 const listeners: { [method: string]: (error: any, result: any, tag: string) => void } = { };
 const requests: { [tag: string]: Request } = { };
 
+let identify_token: string;
+let position: string;
+
 function sendMessage (method: string, data: any = undefined, tag: string = ''): void {
   window.parent.postMessage({
     type: MESSAGE_TYPE,
@@ -131,7 +134,7 @@ export function addListener (method: string, fn: (error: any, result: any, tag: 
  *  Возвращает текущего пользователя
  */
 export function getCurrentUser (): Promise<User> {
-  return createRequest<User>('getCurrentUser');
+  return createRequest('getCurrentUser');
 }
 
 /**
@@ -149,7 +152,7 @@ export function sendNotifi (notifi: { text: string; title: string; state?: 'succ
  * @param argument Передаваемое значение
  */
 export function sendCommand (dev_id: string, command: string, argument?: number | string): Promise<void> {
-  return createRequest<void>('sendCommand', {
+  return createRequest('sendCommand', {
     dev_id,
     command,
     argument,
@@ -161,7 +164,7 @@ export function sendCommand (dev_id: string, command: string, argument?: number 
  * @param filename Путь к файлу
  */
 export function loadTextFile (filename: string): Promise<string> {
-  return createRequest<string>('readFile', {
+  return createRequest('readFile', {
     filename,
   });
 }
@@ -173,7 +176,7 @@ export function loadTextFile (filename: string): Promise<string> {
  * @param is_overwrite Разрешение на перезапись
  */
 export function saveTextFile (filename: string, content: string, is_overwrite = false): Promise<void> {
-  return createRequest<void>('writeFile', {
+  return createRequest('writeFile', {
     filename,
     is_overwrite,
     content,
@@ -190,13 +193,13 @@ export function saveJSONFile (filename: string, content: any, is_overwrite = fal
 }
 
 export function loadDevicesDefinitions (): Promise<{ [dev_id: string]: DeviceDefinition }> {
-  return createRequest<{ [dev_id: string]: DeviceDefinition }>('getDevicesDefinitions');
+  return createRequest('getDevicesDefinitions');
 }
 
 export function saveDeviceDefinition (dev_id: string, {
   title = dev_id, section = 'unsorted', status_variable = '', mnemo = '', url = '', bg_image = '', plugins = [] as string[]
 } = {}): Promise<void> {
-  return createRequest<void>('saveDeviceDefinitionAdvanced', {
+  return createRequest('saveDeviceDefinitionAdvanced', {
     dev_id, title, section, status_variable, mnemo, url, bg_image, plugins
   });
 }
@@ -204,37 +207,37 @@ export function saveDeviceDefinition (dev_id: string, {
 export function saveDeviceDescription (dev_id: string, {
   system = '', model = '', location = '', service = '', description = '', additional = ''
 }): Promise<void> {
-  return createRequest<void>('saveDeviceDescription', {
+  return createRequest('saveDeviceDescription', {
     dev_id, system, model, location, service, description, additional,
   });
 }
 
 export function saveDeviceTileVariables (dev_id: string, variable_ids: string[]): Promise<void> {
-  return createRequest<void>('saveDeviceTileVariables', {
+  return createRequest('saveDeviceTileVariables', {
     dev_id,
     variable_ids,
   });
 }
 
 export function saveDeviceCommands (dev_id: string, variable_ids: string[]): Promise<void> {
-  return createRequest<void>('saveDeviceCommands', {
+  return createRequest('saveDeviceCommands', {
     dev_id,
     variable_ids,
   });
 }
 
 export function loadDevicesData (): Promise<DeviceData[]> {
-  return createRequest<DeviceData[]>('getDevicesData');
+  return createRequest('getDevicesData');
 }
 
 export function loadDeviceData (dev_id: string): Promise<DeviceData > {
-  return createRequest<DeviceData>('getDeviceData', {
+  return createRequest('getDeviceData', {
     dev_id,
   });
 }
 
 export function updateCache (path: string = '', replace_history: boolean = false): Promise<void> {
-  return createRequest<void>('updateCache', {
+  return createRequest('updateCache', {
     path,
     replace_history,
   });
@@ -245,7 +248,7 @@ export function saveSection ({
   use_dev_state = false, subtitle_prop = '_service', is_uncollapsed = true, is_mixed = false, is_hidden_sidebar = false,
   parents =['root'], children =[], sorting =[], slideshow =[], owners =[], slideshow_width = 50
 } = {}): Promise<void> {
-  return createRequest<void>('saveSection', {
+  return createRequest('saveSection', {
     id, old_id, title, subtitle, icon, mnemo, view, linked_dev_id, use_dev_state, subtitle_prop, is_uncollapsed, is_mixed, is_hidden_sidebar, parents, children, sorting, slideshow, owners, slideshow_width
   });
 }
@@ -255,25 +258,25 @@ export function addSection ({
   use_dev_state = false, subtitle_prop = '_service', is_uncollapsed = true, is_mixed = false, is_hidden_sidebar = false,
   parents =['root'], children =[], sorting =[], slideshow =[], owners =[], slideshow_width = 50
 } = {}): Promise<void> {
-  return createRequest<void>('addSection', {
+  return createRequest('addSection', {
     id, title, subtitle, icon, mnemo, view, linked_dev_id, use_dev_state, subtitle_prop, is_uncollapsed, is_mixed, is_hidden_sidebar, parents, children, sorting, slideshow, owners, slideshow_width
   });
 }
 
 export function removeSection (id: string): Promise<void> {
-  return createRequest<void>('removeSection', {
+  return createRequest('removeSection', {
     id,
   });
 }
 
 export function loadSection (id: string): Promise<Section> {
-  return createRequest<Section>('getSection', {
+  return createRequest('getSection', {
     id,
   });
 }
 
 export function loadSections (): Promise<Section[] > {
-  return createRequest<Section[]>('getSections');
+  return createRequest('getSections');
 }
 
 export function navigateTo (path: string, { query = {} as any, replace_history = false } = {}): Promise<void> {
@@ -298,25 +301,32 @@ export function removeFromMailing (mail_id: number, device_ids: string[]): Promi
   });
 }
 
-let identify_token: string;
+export async function identify (): Promise<void> {
+  const response: { identify_token: string; position: string } = await createRequest('identify');
+  identify_token = response.identify_token;
+  position = response.position;
+}
 
-export async function identify (): Promise<string> {
-  if (!identify_token) {
-    const response = await createRequest<{ identify_token: string }>('identify');
-    identify_token = response.identify_token;
+export async function getPosition (): Promise<string> {
+  if (!position) {
+    await identify();
   }
-  return identify_token;
+  return position;
 }
 
 export async function loadSettings (): Promise<any> {
-  const identify_token = await identify();
+  if (!identify_token) {
+    await identify();
+  }
   return createRequest('loadSettings', {
     identify_token,
   });
 }
 
 export async function updateUrl ({ path, device_id }: { path?: string; device_id?: string }): Promise<void> {
-  const identify_token = await identify();
+  if (!identify_token) {
+    await identify();
+  }
   return createRequest('updateUrl', {
     path,
     device_id,

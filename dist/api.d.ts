@@ -172,7 +172,8 @@ export declare function navigateTo(path: string, { query, replace_history }?: {
 }): Promise<void>;
 export declare function addToMailing(mail_id: number, device_ids: string[]): Promise<void>;
 export declare function removeFromMailing(mail_id: number, device_ids: string[]): Promise<void>;
-export declare function identify(): Promise<string>;
+export declare function identify(): Promise<void>;
+export declare function getPosition(): Promise<string>;
 export declare function loadSettings(): Promise<any>;
 export declare function updateUrl({ path, device_id }: {
     path?: string;
