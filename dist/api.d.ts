@@ -193,6 +193,14 @@ export declare function updateUrl({ path, device_id }: {
     path?: string;
     device_id?: string;
 }): Promise<void>;
+export declare function updateTitle({ title, icon }: {
+    title?: string;
+    icon?: string;
+}): Promise<void>;
+export declare function resizeWindow({ width, height }: {
+    width: null | number;
+    height: null | number;
+}): Promise<void>;
 export declare function addButtonListener(id: string, listener: () => void): void;
 export declare function removeButtonListener(id: string): void;
 export declare function registerButtons(buttons: (UrlButton | FunctionButton | Separator)[]): Promise<void>;

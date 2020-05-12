@@ -359,6 +359,28 @@ export async function updateUrl ({ path, device_id }: { path?: string; device_id
   });
 }
 
+export async function updateTitle ({ title, icon }: { title?: string; icon?: string }): Promise<void> {
+  if (!identify_token) {
+    await identify();
+  }
+  return createRequest('updateTitle', {
+    title,
+    icon,
+    identify_token,
+  });
+}
+
+export async function resizeWindow ({ width, height }: { width: null | number; height: null | number }): Promise<void> {
+  if (!identify_token) {
+    await identify();
+  }
+  return createRequest('resizeWindow', {
+    width,
+    height,
+    identify_token,
+  });
+}
+
 let button_id_to_listeners: { [id: string]: () => void } = { };
 
 export function addButtonListener (id: string, listener: () => void) {
