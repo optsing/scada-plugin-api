@@ -370,7 +370,7 @@ export async function updateTitle ({ title, icon }: { title?: string; icon?: str
   });
 }
 
-export async function resizeWindow ({ width, height }: { width: null | number; height: null | number }): Promise<void> {
+export async function resizeWindow (width: null | number, height: null | number): Promise<void> {
   if (!identify_token) {
     await identify();
   }
