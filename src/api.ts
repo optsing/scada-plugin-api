@@ -96,6 +96,7 @@ const requests: { [tag: string]: Request } = { };
 
 let identify_token: string;
 let position: string;
+let identify_promise: Promise<{ identify_token: string; position: string }>;
 
 function sendMessage (method: string, data: any = undefined, tag: string = ''): void {
   window.parent.postMessage({
@@ -327,7 +328,10 @@ export function removeFromMailing (mail_id: number, device_ids: string[]): Promi
 }
 
 export async function identify (): Promise<void> {
-  const response: { identify_token: string; position: string } = await createRequest('identify');
+  if (!identify_promise) {
+    identify_promise = createRequest('identify');
+  }
+  const response = await identify_promise;
   identify_token = response.identify_token;
   position = response.position;
 }
