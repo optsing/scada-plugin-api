@@ -387,11 +387,11 @@ export async function resizeWindow (width: null | number, height: null | number)
 
 let button_id_to_listeners: { [id: string]: () => void } = { };
 
-export function addButtonListener (id: string, listener: () => void) {
+export function addButtonListener (id: string, listener: () => void): void {
   button_id_to_listeners[id] = listener;
 }
 
-export function removeButtonListener (id: string) {
+export function removeButtonListener (id: string): void {
   delete button_id_to_listeners[id];
 }
 
@@ -413,7 +413,7 @@ export async function registerButtons (buttons: (UrlButton | FunctionButton | Se
         title: btn.title,
         icon: btn.icon,
         url: btn.url,
-      }
+      };
       if (btn.url_mode) {
         urlButton.url_mode = btn.url_mode;
       }
