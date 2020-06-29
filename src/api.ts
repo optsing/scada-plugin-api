@@ -214,7 +214,7 @@ export async function loadJSONFile (filename: string, json_parser: { parse: (tex
   return json_parser.parse(text);
 }
 
-export function saveJSONFile (filename: string, content: any, is_overwrite = false): Promise<void> {
+export function saveJSONFile (filename: string, content: unknown, is_overwrite = false): Promise<void> {
   return saveTextFile(filename, JSON.stringify(content, null, 4), is_overwrite);
 }
 
@@ -232,7 +232,7 @@ export function saveDeviceDefinition (dev_id: string, {
 
 export function saveDeviceDescription (dev_id: string, {
   system = '', model = '', location = '', service = '', description = '', additional = ''
-}): Promise<void> {
+} = {}): Promise<void> {
   return createRequest('saveDeviceDescription', {
     dev_id, system, model, location, service, description, additional,
   });

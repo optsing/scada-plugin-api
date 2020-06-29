@@ -110,7 +110,7 @@ export declare function saveTextFile(filename: string, content: string, is_overw
 export declare function loadJSONFile(filename: string, json_parser?: {
     parse: (text: string) => any;
 }): Promise<any>;
-export declare function saveJSONFile(filename: string, content: any, is_overwrite?: boolean): Promise<void>;
+export declare function saveJSONFile(filename: string, content: unknown, is_overwrite?: boolean): Promise<void>;
 export declare function loadDevicesDefinitions(): Promise<{
     [dev_id: string]: DeviceDefinition;
 }>;
@@ -123,7 +123,7 @@ export declare function saveDeviceDefinition(dev_id: string, { title, section, s
     bg_image?: string | undefined;
     plugins?: string[] | undefined;
 }): Promise<void>;
-export declare function saveDeviceDescription(dev_id: string, { system, model, location, service, description, additional }: {
+export declare function saveDeviceDescription(dev_id: string, { system, model, location, service, description, additional }?: {
     system?: string | undefined;
     model?: string | undefined;
     location?: string | undefined;
