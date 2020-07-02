@@ -225,8 +225,10 @@ export function saveJSONFile (filename: string, content: unknown, is_overwrite =
   return saveTextFile(filename, JSON.stringify(content, null, 4), is_overwrite);
 }
 
-export function loadDevicesDefinitions (): Promise<{ [dev_id: string]: DeviceDefinition }> {
-  return createRequest('getDevicesDefinitions');
+export function loadDevicesDefinitions (device_ids?: string[]): Promise<{ [dev_id: string]: DeviceDefinition }> {
+  return createRequest('getDevicesDefinitions', {
+    device_ids,
+  });
 }
 
 export function saveDeviceDefinition (dev_id: string, {
@@ -334,7 +336,7 @@ export function removeFromMailing (mail_id: number, device_ids: string[]): Promi
   });
 }
 
-export function getDeviceArchiveData (device_id: string, var_list: string[], date_from: string, date_to: string, { period = 60 } = { }): Promise<{ [var_id: string]: { x: number[], y: any[] } }> {
+export function loadDeviceArchiveData (device_id: string, var_list: string[], date_from: string, date_to: string, { period = 60 } = { }): Promise<{ [var_id: string]: { x: number[], y: any[] } }> {
   return createRequest('getDeviceArchiveData', {
     device_id,
     var_list,

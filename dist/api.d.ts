@@ -114,7 +114,7 @@ export declare function loadJSONFile(filename: string, json_parser?: {
     parse: (text: string) => any;
 }): Promise<any>;
 export declare function saveJSONFile(filename: string, content: unknown, is_overwrite?: boolean): Promise<void>;
-export declare function loadDevicesDefinitions(): Promise<{
+export declare function loadDevicesDefinitions(device_ids?: string[]): Promise<{
     [dev_id: string]: DeviceDefinition;
 }>;
 export declare function saveDeviceDefinition(dev_id: string, { title, section, status_variable, mnemo, url, bg_image, plugins }?: {
@@ -189,7 +189,7 @@ export declare function navigateTo(path: string, { query, replace_history }?: {
 }): Promise<void>;
 export declare function addToMailing(mail_id: number, device_ids: string[]): Promise<void>;
 export declare function removeFromMailing(mail_id: number, device_ids: string[]): Promise<void>;
-export declare function getDeviceArchiveData(device_id: string, var_list: string[], date_from: string, date_to: string, { period }?: {
+export declare function loadDeviceArchiveData(device_id: string, var_list: string[], date_from: string, date_to: string, { period }?: {
     period?: number | undefined;
 }): Promise<{
     [var_id: string]: {
