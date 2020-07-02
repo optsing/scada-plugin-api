@@ -334,8 +334,8 @@ export function removeFromMailing (mail_id: number, device_ids: string[]): Promi
   });
 }
 
-export function getArchiveDeviceData (device_id: string, var_list: string[], date_from: string, date_to: string, { period = 60 } = { }): Promise<void> {
-  return createRequest('getArchiveDeviceData', {
+export function getDeviceArchiveData (device_id: string, var_list: string[], date_from: string, date_to: string, { period = 60 } = { }): Promise<void> {
+  return createRequest('getDeviceArchiveData', {
     device_id,
     var_list,
     date_from,
