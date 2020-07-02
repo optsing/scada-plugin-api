@@ -171,6 +171,13 @@ export function sendNotifi (notifi: { text: string; title: string; state?: 'succ
   return createRequest('notifi', notifi);
 }
 
+export function openDevicePage (device_id: string, { tab = 'info' }: { tab: 'info' | 'control' | 'vars'; } = { tab: 'info' }): Promise<void> {
+  return createRequest('openDevicePage', {
+    device_id,
+    tab,
+  });
+}
+
 /**
  * Отправляет команду в ядро
  * @param dev_id ID устройства
