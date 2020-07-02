@@ -191,7 +191,12 @@ export declare function addToMailing(mail_id: number, device_ids: string[]): Pro
 export declare function removeFromMailing(mail_id: number, device_ids: string[]): Promise<void>;
 export declare function getDeviceArchiveData(device_id: string, var_list: string[], date_from: string, date_to: string, { period }?: {
     period?: number | undefined;
-}): Promise<void>;
+}): Promise<{
+    [var_id: string]: {
+        x: number[];
+        y: any[];
+    };
+}>;
 export declare function identify(): Promise<void>;
 export declare function getPosition(): Promise<string>;
 export declare function loadSettings(): Promise<any>;
