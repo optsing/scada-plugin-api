@@ -89,7 +89,7 @@ export declare function sendNotifi(notifi: {
     state?: 'success' | 'user' | 'warning' | 'message' | 'danger' | 'help';
 }): Promise<void>;
 export declare function openDevicePage(device_id: string, { tab }?: {
-    tab: 'info' | 'control' | 'vars';
+    tab?: 'info' | 'control' | 'vars';
 }): Promise<void>;
 /**
  * Отправляет команду в ядро

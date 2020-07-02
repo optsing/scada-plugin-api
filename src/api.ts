@@ -171,7 +171,7 @@ export function sendNotifi (notifi: { text: string; title: string; state?: 'succ
   return createRequest('notifi', notifi);
 }
 
-export function openDevicePage (device_id: string, { tab = 'info' }: { tab: 'info' | 'control' | 'vars'; } = { tab: 'info' }): Promise<void> {
+export function openDevicePage (device_id: string, { tab = 'info' }: { tab?: 'info' | 'control' | 'vars'; } = { }): Promise<void> {
   return createRequest('openDevicePage', {
     device_id,
     tab,
