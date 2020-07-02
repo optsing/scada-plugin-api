@@ -334,6 +334,16 @@ export function removeFromMailing (mail_id: number, device_ids: string[]): Promi
   });
 }
 
+export function getArchiveDeviceData (device_id: string, var_list: string[], date_from: string, date_to: string, { period = 60 } = { }): Promise<void> {
+  return createRequest('getArchiveDeviceData', {
+    device_id,
+    var_list,
+    date_from,
+    date_to,
+    period,
+  });
+}
+
 export async function identify (): Promise<void> {
   if (!identify_promise) {
     identify_promise = createRequest('identify');
