@@ -336,13 +336,13 @@ export function removeFromMailing (mail_id: number, device_ids: string[]): Promi
   });
 }
 
-export function loadDeviceArchiveData (device_id: string, var_list: string[], date_from: string, date_to: string, { period = 60 } = { }): Promise<{ [var_id: string]: { x: number[], y: any[] } }> {
+export function loadDeviceArchiveData (device_id: string, var_list: string[], date_from: string, date_to: string, { step = 60 } = { }): Promise<{ [var_id: string]: { x: number[], y: any[] } }> {
   return createRequest('getDeviceArchiveData', {
     device_id,
     var_list,
     date_from,
     date_to,
-    period,
+    step,
   });
 }
 

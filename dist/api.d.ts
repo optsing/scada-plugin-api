@@ -189,8 +189,8 @@ export declare function navigateTo(path: string, { query, replace_history }?: {
 }): Promise<void>;
 export declare function addToMailing(mail_id: number, device_ids: string[]): Promise<void>;
 export declare function removeFromMailing(mail_id: number, device_ids: string[]): Promise<void>;
-export declare function loadDeviceArchiveData(device_id: string, var_list: string[], date_from: string, date_to: string, { period }?: {
-    period?: number | undefined;
+export declare function loadDeviceArchiveData(device_id: string, var_list: string[], date_from: string, date_to: string, { step }?: {
+    step?: number | undefined;
 }): Promise<{
     [var_id: string]: {
         x: number[];
