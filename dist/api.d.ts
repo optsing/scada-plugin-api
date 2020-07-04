@@ -208,7 +208,7 @@ export declare function updateTitle({ title, icon }: {
     title?: string;
     icon?: string;
 }): Promise<void>;
-export declare function resizeWindow(width: null | number, height: null | number): Promise<void>;
+export declare function resizeWindow(width: null | number, height: null | number, preserve_aspect_ratio?: boolean): Promise<void>;
 export declare function addButtonListener(id: string, listener: () => void): void;
 export declare function removeButtonListener(id: string): void;
 export declare function registerButtons(buttons: (UrlButton | FunctionButton | Separator)[]): Promise<void>;

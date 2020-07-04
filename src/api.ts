@@ -393,13 +393,14 @@ export async function updateTitle ({ title, icon }: { title?: string; icon?: str
   });
 }
 
-export async function resizeWindow (width: null | number, height: null | number): Promise<void> {
+export async function resizeWindow (width: null | number, height: null | number, preserve_aspect_ratio: boolean = false): Promise<void> {
   if (!identify_token) {
     await identify();
   }
   return createRequest('resizeWindow', {
     width,
     height,
+    preserve_aspect_ratio,
     identify_token,
   });
 }
