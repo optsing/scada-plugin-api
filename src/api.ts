@@ -271,11 +271,8 @@ export function loadDeviceData (dev_id: string): Promise<DeviceData > {
   });
 }
 
-export function updateCache (path: string = '', replace_history: boolean = false): Promise<void> {
-  return createRequest('updateCache', {
-    path,
-    replace_history,
-  });
+export function updateCache (): Promise<void> {
+  return createRequest('updateCache');
 }
 
 export function saveSection ({
@@ -314,11 +311,29 @@ export function loadSections (): Promise<Section[] > {
   return createRequest('getSections');
 }
 
-export function navigateTo (path: string, { query = {} as any, replace_history = false } = {}): Promise<void> {
+export function navigateTo (path: string, { query = {} as { [key: string]: any }, replace_history = false, update_cache = false } = {}): Promise<void> {
   return createRequest('navigateTo', {
     path,
     query,
     replace_history,
+    update_cache,
+  });
+}
+
+export function navigateToSection (id: string, { replace_history = false, update_cache = false } = { }): Promise<void> {
+  return createRequest('navigateToSection', {
+    id,
+    replace_history,
+    update_cache,
+  });
+}
+
+export function navigateToDevice (id: string, { show_device_page = true, replace_history = false, update_cache = false } = { }): Promise<void> {
+  return createRequest('navigateToDevice', {
+    id,
+    show_device_page,
+    replace_history,
+    update_cache,
   });
 }
 

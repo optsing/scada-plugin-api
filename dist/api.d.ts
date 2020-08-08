@@ -138,7 +138,7 @@ export declare function saveDeviceTileVariables(dev_id: string, variable_ids: st
 export declare function saveDeviceCommands(dev_id: string, variable_ids: string[]): Promise<void>;
 export declare function loadDevicesData(): Promise<DeviceData[]>;
 export declare function loadDeviceData(dev_id: string): Promise<DeviceData>;
-export declare function updateCache(path?: string, replace_history?: boolean): Promise<void>;
+export declare function updateCache(): Promise<void>;
 export declare function saveSection({ id, old_id, title, subtitle, icon, mnemo, view, linked_dev_id, use_dev_state, subtitle_prop, is_uncollapsed, is_mixed, is_hidden_sidebar, parents, children, sorting, slideshow, owners, slideshow_width }?: {
     id?: string | undefined;
     old_id?: string | undefined;
@@ -183,9 +183,21 @@ export declare function addSection({ id, title, subtitle, icon, mnemo, view, lin
 export declare function removeSection(id: string): Promise<void>;
 export declare function loadSection(id: string): Promise<Section>;
 export declare function loadSections(): Promise<Section[]>;
-export declare function navigateTo(path: string, { query, replace_history }?: {
-    query?: any;
+export declare function navigateTo(path: string, { query, replace_history, update_cache }?: {
+    query?: {
+        [key: string]: any;
+    } | undefined;
     replace_history?: boolean | undefined;
+    update_cache?: boolean | undefined;
+}): Promise<void>;
+export declare function navigateToSection(id: string, { replace_history, update_cache }?: {
+    replace_history?: boolean | undefined;
+    update_cache?: boolean | undefined;
+}): Promise<void>;
+export declare function navigateToDevice(id: string, { show_device_page, replace_history, update_cache }?: {
+    show_device_page?: boolean | undefined;
+    replace_history?: boolean | undefined;
+    update_cache?: boolean | undefined;
 }): Promise<void>;
 export declare function addToMailing(mail_id: number, device_ids: string[]): Promise<void>;
 export declare function removeFromMailing(mail_id: number, device_ids: string[]): Promise<void>;
