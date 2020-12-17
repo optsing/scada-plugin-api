@@ -13,6 +13,13 @@
             "type": "npm",
             "script": "typing",
             "problemMatcher": []
+        },
+        {
+            "type": "npm",
+            "script": "doc",
+            "problemMatcher": [],
+            "label": "npm: doc",
+            "detail": "typedoc"
         }
     ]
 }
