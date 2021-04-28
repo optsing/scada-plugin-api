@@ -18,5 +18,9 @@
   "exclude": [
     "dist",
     "node_modules"
-  ]
+  ],
+  "typedocOptions": {
+    "entryPoints": ["src/api.ts"],
+    "out": "docs"
+  }
 }

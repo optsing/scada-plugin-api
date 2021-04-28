@@ -211,6 +211,12 @@ export declare function loadDeviceArchiveData(device_id: string, var_list: strin
 }>;
 export declare function identify(): Promise<void>;
 export declare function getPosition(): Promise<string>;
+/**
+ * Получение подписанного JWT-токена
+ */
+export declare function getToken(): Promise<{
+    token: string;
+}>;
 export declare function loadSettings(): Promise<any>;
 export declare function updateUrl({ path, device_id }: {
     path?: string;

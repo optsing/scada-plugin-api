@@ -8,7 +8,9 @@
                 "useBuiltIns": "usage",
                 "corejs": 3,
                 "loose": true,
-                "debug": true
+                "debug": true,
+                "bugfixes": true,
+                "shippedProposals": true
             }
         ]
     ]

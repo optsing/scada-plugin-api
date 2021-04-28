@@ -377,6 +377,18 @@ export async function getPosition (): Promise<string> {
   return position;
 }
 
+/**
+ * Получение подписанного JWT-токена
+ */
+export async function getToken (): Promise<{ token: string }> {
+  if (!identify_token) {
+    await identify();
+  }
+  return createRequest('getToken', {
+    identify_token,
+  });
+}
+
 export async function loadSettings (): Promise<any> {
   if (!identify_token) {
     await identify();
