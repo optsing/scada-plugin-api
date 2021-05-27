@@ -12,7 +12,7 @@ export interface User {
 export interface BasicDeviceDefinition {
   title: string;
   section: string;
-  status_variable: string;
+  mode: string;
   mnemo: string;
   url: string;
   bg_image: string;
@@ -20,11 +20,11 @@ export interface BasicDeviceDefinition {
 }
 
 export interface DescriptionDeviceDefinition {
-  doc_system: string;
-  doc_model: string;
-  doc_location_room: string;
-  doc_service_room: string;
-  doc_info: string;
+  system: string;
+  model: string;
+  location: string;
+  service: string;
+  description: string;
   additional: string;
 }
 
@@ -37,9 +37,6 @@ export interface DeviceDefinition extends BasicDeviceDefinition, DescriptionDevi
   commands: string[];
   commands_tile: string[];
   handler: string;
-  mode: string;
-  room: string;
-  service: string[];
   variables_info: { [var_id: string]: any };
   variables_tile: string[];
   comment: string;
