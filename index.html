@@ -7,5 +7,18 @@
     <title>Тест Api</title>
     <script src="dist/api.js"></script>
   </head>
-  <body></body>
+  <body>
+    <a href="docs/" target="_blank" rel="noopener">Ссылка на документацию</a>
+    <p><b>Проверка работы:</b></p>
+    <p class="output" style="white-space: pre; background: #eee;"></p>
+    <script type="text/javascript">
+      PluginApi.getCurrentUser()
+        .then(user => {
+          document.querySelector('.output').innerHTML = 'Текущий пользователь\n' + JSON.stringify(user, null, '  ');
+        })
+        .catch(err => {
+          document.querySelector('.output').innerHTML = 'Ошибка при запросе:\n' + err.toString();
+        });
+    </script>
+  </body>
 </html>
