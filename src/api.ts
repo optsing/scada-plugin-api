@@ -55,26 +55,26 @@ export interface Section {
   parents: string[];
 }
 
-interface UrlButton {
+export interface UrlButton {
   title: string;
   icon: string;
   url: string;
   url_mode?: 'external' | 'download';
 }
 
-interface FunctionButton {
+export interface FunctionButton {
   title: string;
   icon: string;
   onClick: () => void;
 }
 
-interface IdButton {
+export interface IdButton {
   title: string;
   icon: string;
   id: string;
 }
 
-interface Separator {
+export interface Separator {
   separator: true;
 }
 

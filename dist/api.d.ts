@@ -53,18 +53,23 @@ export interface Section {
     id: string;
     parents: string[];
 }
-interface UrlButton {
+export interface UrlButton {
     title: string;
     icon: string;
     url: string;
     url_mode?: 'external' | 'download';
 }
-interface FunctionButton {
+export interface FunctionButton {
     title: string;
     icon: string;
     onClick: () => void;
 }
-interface Separator {
+export interface IdButton {
+    title: string;
+    icon: string;
+    id: string;
+}
+export interface Separator {
     separator: true;
 }
 /**
@@ -227,4 +232,3 @@ export declare function resizeWindow(width: null | number, height: null | number
 export declare function addButtonListener(id: string, listener: () => void): void;
 export declare function removeButtonListener(id: string): void;
 export declare function registerButtons(buttons: (UrlButton | FunctionButton | Separator)[]): Promise<void>;
-export {};
